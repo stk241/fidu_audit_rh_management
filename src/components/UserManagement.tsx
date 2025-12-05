@@ -83,6 +83,8 @@ export function UserManagement() {
 
   const handleUpdate = async (id: string) => {
     try {
+      await supabase.auth.refreshSession();
+
       const { data: { session } } = await supabase.auth.getSession();
       const currentUserRole = session?.user?.app_metadata?.role;
 
@@ -90,6 +92,7 @@ export function UserManagement() {
       console.log('Current user ID:', session?.user?.id);
       console.log('Current user email:', session?.user?.email);
       console.log('Current user role from JWT:', currentUserRole);
+      console.log('Full app_metadata:', session?.user?.app_metadata);
       console.log('Updating user ID:', id);
       console.log('Update data:', {
         first_name: formData.first_name,
@@ -98,7 +101,7 @@ export function UserManagement() {
       });
 
       if (currentUserRole !== 'ADMIN') {
-        alert(`ERREUR: Votre rôle actuel est "${currentUserRole}". Vous devez être ADMIN pour modifier les utilisateurs. Veuillez vous déconnecter et vous reconnecter.`);
+        alert(`ERREUR: Votre rôle actuel est "${currentUserRole}". La session a été rafraîchie mais le rôle n'est toujours pas ADMIN. Contactez l'administrateur système.`);
         return;
       }
 
