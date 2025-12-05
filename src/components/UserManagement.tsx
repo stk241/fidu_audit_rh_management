@@ -83,14 +83,24 @@ export function UserManagement() {
 
   const handleUpdate = async (id: string) => {
     try {
-      const { data: currentUser } = await supabase.auth.getUser();
-      console.log('Current user ID:', currentUser?.user?.id);
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUserRole = session?.user?.app_metadata?.role;
+
+      console.log('=== DIAGNOSTIC UPDATE ===');
+      console.log('Current user ID:', session?.user?.id);
+      console.log('Current user email:', session?.user?.email);
+      console.log('Current user role from JWT:', currentUserRole);
       console.log('Updating user ID:', id);
       console.log('Update data:', {
         first_name: formData.first_name,
         last_name: formData.last_name,
         role: formData.role,
       });
+
+      if (currentUserRole !== 'ADMIN') {
+        alert(`ERREUR: Votre rôle actuel est "${currentUserRole}". Vous devez être ADMIN pour modifier les utilisateurs. Veuillez vous déconnecter et vous reconnecter.`);
+        return;
+      }
 
       const { data, error } = await supabase
         .from('users')
@@ -104,10 +114,17 @@ export function UserManagement() {
 
       console.log('Update result:', { data, error });
 
-      if (error) throw error;
+      if (error) {
+        console.error('RLS Error details:', error);
+        throw error;
+      }
+
+      if (data && data.length > 0) {
+        alert('Utilisateur mis à jour avec succès !');
+      }
 
       setEditingId(null);
-      fetchUsers();
+      await fetchUsers();
     } catch (err: any) {
       console.error('Error updating user:', err);
       alert(`Erreur lors de la mise à jour de l'utilisateur: ${err.message || 'Erreur inconnue'}`);
