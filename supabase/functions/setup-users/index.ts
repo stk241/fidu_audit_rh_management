@@ -27,34 +27,17 @@ Deno.serve(async (req: Request) => {
     });
 
     const users = [
-      {
-        email: 'admin@fiduaudit.com',
-        password: 'Admin123!',
-        firstName: 'Marie',
-        lastName: 'Dupont',
-        role: 'ADMIN'
-      },
-      {
-        email: 'chef@fiduaudit.com',
-        password: 'Chef123!',
-        firstName: 'Pierre',
-        lastName: 'Martin',
-        role: 'CHEF_DE_MISSION'
-      },
-      {
-        email: 'assistant1@fiduaudit.com',
-        password: 'Assistant123!',
-        firstName: 'Sophie',
-        lastName: 'Bernard',
-        role: 'ASSISTANT'
-      },
-      {
-        email: 'assistant2@fiduaudit.com',
-        password: 'Assistant123!',
-        firstName: 'Lucas',
-        lastName: 'Petit',
-        role: 'ASSISTANT'
-      }
+      { email: 's.klutsch@fidu.fr', password: 'FiduAudit2025!', firstName: 'Stephane', lastName: 'Klutsch', role: 'ADMIN' },
+      { email: 'j.mardjoeki@fidu.fr', password: 'FiduAudit2025!', firstName: 'Julie', lastName: 'Mardjoeki', role: 'ADMIN' },
+      { email: 'm.roques@fidu.fr', password: 'FiduAudit2025!', firstName: 'Mélanie', lastName: 'Roques', role: 'ADMIN' },
+      { email: 's.walther@fidu.fr', password: 'FiduAudit2025!', firstName: 'Sabrina', lastName: 'Walther', role: 'ADMIN' },
+      { email: 'c.deroualle@fidu.fr', password: 'FiduAudit2025!', firstName: 'Cyrille', lastName: 'Deroualle', role: 'CHEF_DE_MISSION' },
+      { email: 'm.dhers@fidu.fr', password: 'FiduAudit2025!', firstName: 'Marie', lastName: 'Dhers', role: 'CHEF_DE_MISSION' },
+      { email: 'r.lefortier@fidu.fr', password: 'FiduAudit2025!', firstName: 'Remi', lastName: 'Lefortier', role: 'CHEF_DE_MISSION' },
+      { email: 'c.vasseur@fidu.fr', password: 'FiduAudit2025!', firstName: 'Christina', lastName: 'Vasseur', role: 'CHEF_DE_MISSION' },
+      { email: 's.jabnati@fidu.fr', password: 'FiduAudit2025!', firstName: 'Samir', lastName: 'Jabnati', role: 'ASSISTANT' },
+      { email: 'e.lauzu@fidu.fr', password: 'FiduAudit2025!', firstName: 'Emeline', lastName: 'Lauzu', role: 'ASSISTANT' },
+      { email: 's.rochambeau@fidu.fr', password: 'FiduAudit2025!', firstName: 'Shannel', lastName: 'Rochambeau', role: 'ASSISTANT' }
     ];
 
     const results = [];
@@ -110,13 +93,13 @@ Deno.serve(async (req: Request) => {
     }
 
     return new Response(
-      JSON.stringify({ 
-        message: 'Users setup completed', 
+      JSON.stringify({
+        message: 'Users setup completed',
         results,
-        credentials: [
-          { email: 'admin@fiduaudit.com', password: 'Admin123!', role: 'ADMIN' },
-          { email: 'chef@fiduaudit.com', password: 'Chef123!', role: 'CHEF_DE_MISSION' }
-        ]
+        credentials: {
+          password: 'FiduAudit2025!',
+          note: 'All users share the same password. They should change it on first login.'
+        }
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
