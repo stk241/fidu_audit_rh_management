@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
-import { Users, LogOut, Calendar, Lock } from 'lucide-react';
+import { Users, LogOut, Calendar, Lock, AlertCircle } from 'lucide-react';
 import { AdminMenu } from './AdminMenu';
 import { SaisonManagement } from './SaisonManagement';
 import { UserManagement } from './UserManagement';
@@ -16,12 +16,13 @@ interface DashboardProps {
 }
 
 export function Dashboard({ onSelectCollaborator }: DashboardProps) {
-  const { profile, signOut } = useAuth();
+  const { profile, signOut, user } = useAuth();
   const [collaborators, setCollaborators] = useState<UserProfile[]>([]);
   const [activeSaison, setActiveSaison] = useState<Saison | null>(null);
   const [loading, setLoading] = useState(true);
   const [adminView, setAdminView] = useState<'dashboard' | 'saisons' | 'users'>('dashboard');
   const [showPasswordChange, setShowPasswordChange] = useState(false);
+  const jwtRole = user?.app_metadata?.role;
 
   useEffect(() => {
     loadData();
@@ -101,6 +102,23 @@ export function Dashboard({ onSelectCollaborator }: DashboardProps) {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {jwtRole !== profile?.role && (
+          <div className="mb-6 bg-yellow-50 border-2 border-yellow-400 rounded-lg p-4 flex items-start gap-3">
+            <AlertCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <h3 className="text-base font-bold text-yellow-900 mb-2">
+                ⚠️ ATTENTION: Rôle non synchronisé
+              </h3>
+              <p className="text-sm text-yellow-800 mb-2">
+                Votre rôle JWT est <strong className="font-bold">"{jwtRole || 'undefined'}"</strong> mais votre rôle dans la base de données est <strong className="font-bold">"{profile?.role}"</strong>.
+              </p>
+              <p className="text-sm text-yellow-900 font-semibold">
+                → Vous DEVEZ vous déconnecter et vous reconnecter pour que les modifications prennent effet.
+              </p>
+            </div>
+          </div>
+        )}
+
         {profile?.role === 'ADMIN' && (
           <div className="mb-6">
             <AdminMenu activeView={adminView} onViewChange={setAdminView} />
