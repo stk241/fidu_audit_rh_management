@@ -45,6 +45,7 @@ export function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="username"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fidu-600 focus:border-transparent outline-none transition"
               placeholder="votre.email@fidu.fr"
             />
@@ -60,6 +61,7 @@ export function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fidu-600 focus:border-transparent outline-none transition"
               placeholder="••••••••"
             />
