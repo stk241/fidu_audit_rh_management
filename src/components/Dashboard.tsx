@@ -43,7 +43,7 @@ export function Dashboard({ onSelectCollaborator }: DashboardProps) {
         .order('last_name', { ascending: true });
 
       if (profile.role === 'ADMIN') {
-        query = query.eq('role', 'CHEF_DE_MISSION');
+        query = query.in('role', ['CHEF_DE_MISSION', 'ASSISTANT']);
       } else if (profile.role === 'CHEF_DE_MISSION') {
         query = query.eq('role', 'ASSISTANT');
       }
