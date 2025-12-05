@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
-import { Users, LogOut, Calendar } from 'lucide-react';
+import { Users, LogOut, Calendar, Lock } from 'lucide-react';
 import { AdminMenu } from './AdminMenu';
 import { SaisonManagement } from './SaisonManagement';
 import { UserManagement } from './UserManagement';
+import { PasswordChange } from './PasswordChange';
 
 type UserProfile = Database['public']['Tables']['users']['Row'];
 type Saison = Database['public']['Tables']['saisons']['Row'];
@@ -20,6 +21,7 @@ export function Dashboard({ onSelectCollaborator }: DashboardProps) {
   const [activeSaison, setActiveSaison] = useState<Saison | null>(null);
   const [loading, setLoading] = useState(true);
   const [adminView, setAdminView] = useState<'dashboard' | 'saisons' | 'users'>('dashboard');
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -78,13 +80,22 @@ export function Dashboard({ onSelectCollaborator }: DashboardProps) {
                 {profile?.first_name} {profile?.last_name} • {profile?.role.replace('_', ' ')}
               </p>
             </div>
-            <button
-              onClick={() => signOut()}
-              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>Déconnexion</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowPasswordChange(true)}
+                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+              >
+                <Lock className="w-4 h-4" />
+                <span>Mot de passe</span>
+              </button>
+              <button
+                onClick={() => signOut()}
+                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Déconnexion</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -156,6 +167,10 @@ export function Dashboard({ onSelectCollaborator }: DashboardProps) {
           </>
         )}
       </main>
+
+      {showPasswordChange && (
+        <PasswordChange onClose={() => setShowPasswordChange(false)} />
+      )}
     </div>
   );
 }
